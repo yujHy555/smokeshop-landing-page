@@ -142,7 +142,7 @@ export default function CartDrawer({
                   </div>
 
                   <p className="text-[11px] text-[#6B3C1B] font-medium truncate">
-                    {item.milk} • {item.sweetness}
+                    {item.customNote || `${item.milk} • ${item.sweetness}`}
                   </p>
 
                   <div className="flex items-center justify-between mt-2">

@@ -24,14 +24,20 @@
 - **Confetti & Tactile Sound**: One-click code copying triggers a burst of celebratory confetti.
 
 ### 3. Section 3: Menu & Automatic Product Slideshow
-- **Automatic Product Slideshow**: Automatically rotates every 5 seconds through the 4 signature products with an animated real-time progress bar:
-  1. **Espresso Shot** ($3.00) — *Bold, intense, and full-bodied! Velvety golden crema.*
-  2. **Coffee Freeza** ($5.50) — *Frosty blended delight with whipped cream and sweet chocolate drizzle.*
-  3. **Cappuccino** ($4.50) — *A warm hug in a cup with a cocoa heart dusting.*
-  4. **Pumpkin Spice Latte** ($5.75) — *Autumn favorite blended with real pumpkin and spices.*
-- **Controls**: Pause/Resume, Previous/Next buttons, and direct dot navigation.
-- **Interactive Drink Customizer**: Choose whole milk, oat milk, or almond milk, adjust sweetness, and add to your Sip Tray.
-- **Grid View Toggle**: Switch between the cinema slideshow view and a quick-browse 4-column menu card grid.
+- **Automatic Product Slideshow**: Automatically rotates through our handcrafted menu items with an animated real-time progress bar:
+  - **☕ Signature Drinks**:
+    1. **Espresso Shot** ($3.00) — *Bold, intense, and full-bodied! Velvety golden crema.*
+    2. **Coffee Freeza** ($5.50) — *Frosty blended delight with whipped cream and sweet chocolate drizzle.*
+    3. **Cappuccino** ($4.50) — *A warm hug in a cup with a cocoa heart dusting.*
+    4. **Pumpkin Spice Latte** ($5.75) — *Autumn favorite blended with real pumpkin and spices.*
+  - **🍩 Fresh Artisan Bakery**:
+    5. **The Chocolate Deal** ($4.50) — *Double chocolate doughnut, dark chocolate crumbs & handcrafted chocolate heart.*
+    6. **Red Velvet Doughnut** ($4.75) — *Fluffy red velvet, luscious cream cheese glaze & deep-red cake crumbs.*
+    7. **Birthday Doughnut** ($4.50) — *Fresh-glazed doughnut with rainbow sprinkles, vanilla buttercream & tiny birthday candle.*
+- **Category Filter Tabs**: Jump between *All Sips & Bites*, *Hot Espresso*, *Frosty Freezas*, *Artisan Doughnuts*, and *Autumn Specials*.
+- **Controls**: Pause/Resume, Previous/Next buttons, and direct thumbnail dot navigation.
+- **Interactive Customizer**: Choose milk types (Whole, Oat, Almond) and sweetness for drinks, or serving temperature (*Warm from Oven*, *Room Temp*) and packaging (*Bakery Pouch*, *Gift Box*) for doughnuts!
+- **Grid View Toggle**: Switch between the cinema slideshow view and a quick-browse menu card grid.
 
 ### 4. Satisfying Soft-Stop Scrolling Mechanics
 - **Mouse Wheel / Trackpad Conversion**: Vertical wheel scrolling translates smoothly to horizontal panning.
