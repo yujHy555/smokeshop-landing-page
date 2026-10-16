@@ -167,13 +167,19 @@ export default function HeroHome({ onGoToMenu, onGoToPromos }) {
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-3xl">☕</span>
-                <div>
-                  <h3 className="font-bubble text-3xl sm:text-4xl text-[#3A1D0B] leading-none">
-                    ABOUT THE SMOKE SHOP
-                  </h3>
-                  <p className="font-retro text-sm text-[#8B3A2B] font-bold">EST. 2024 • YOUR COZY NEIGHBORHOOD CHILL HUB</p>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 pb-4 border-b border-[#DFCBB5]">
+                <img
+                  src="/images/main-logo.png"
+                  alt="Smoke Shop EST. 2024"
+                  className="h-14 sm:h-16 w-auto object-contain"
+                />
+                <div className="text-left sm:text-right">
+                  <div className="font-bubble text-xl sm:text-2xl text-[#3A1D0B] leading-none">
+                    ABOUT THE SHOP
+                  </div>
+                  <p className="font-retro text-xs text-[#8B3A2B] font-bold mt-1">
+                    YOUR COZY NEIGHBORHOOD CHILL HUB
+                  </p>
                 </div>
               </div>
 

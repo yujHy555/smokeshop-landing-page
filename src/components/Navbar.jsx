@@ -61,26 +61,17 @@ export default function Navbar({
 
       {/* Main Navigation Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
-        {/* Brand Logo matching mockup */}
+        {/* Official Main Logo */}
         <button 
           onClick={() => handleNavClick(0)}
-          className="flex items-center gap-2.5 sm:gap-3 text-left focus:outline-hidden group"
+          className="flex items-center text-left focus:outline-hidden group cursor-pointer"
+          aria-label="Smoke Shop Home"
         >
-          {/* Cute Mini Mascot Cup in Logo */}
-          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#FFFDF9] border-2 border-[#4A2E1B] flex items-center justify-center retro-shadow-sm group-hover:rotate-6 transition-transform">
-            <span className="text-xl">☕</span>
-          </div>
-
-          <div className="flex flex-col">
-            <div className="font-bubble text-xl sm:text-2xl text-[#4A2E1B] tracking-tight leading-none group-hover:text-[#8B3A2B] transition-colors">
-              SMOKE SHOP
-            </div>
-            <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-retro text-[#8A5230] tracking-widest uppercase">
-              <span>EST. 2024</span>
-              <span>•</span>
-              <span className="text-[#8B3A2B] font-bold">CHILL HUB</span>
-            </div>
-          </div>
+          <img
+            src="/images/main-logo.png"
+            alt="Smoke Shop EST. 2024"
+            className="h-11 sm:h-14 md:h-16 w-auto object-contain transition-transform group-hover:scale-105"
+          />
         </button>
 
         {/* Desktop Navigation Links */}
