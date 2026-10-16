@@ -6,6 +6,7 @@ import MenuSlideshow from './components/MenuSlideshow';
 import SideScrollControls from './components/SideScrollControls';
 import CartDrawer from './components/CartDrawer';
 import SearchModal from './components/SearchModal';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { playPopSound, playSlideWhoosh } from './utils/soundEffects';
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
   const isDraggingRef = useRef(false);
   const startXRef = useRef(0);
   const scrollLeftStartRef = useRef(0);
+  const touchStartXRef = useRef(0);
 
   const totalSections = 3;
 
@@ -59,10 +61,12 @@ export default function App() {
       // If modal or cart is open, let normal modal scrolling occur
       if (isCartOpen || isSearchOpen) return;
 
-      // Translate vertical wheel delta into horizontal scroll
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      // Handle vertical wheel delta (deltaY) and horizontal trackpad swipe (deltaX)
+      const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+      
+      if (Math.abs(delta) > 1) {
         e.preventDefault();
-        container.scrollLeft += e.deltaY * 1.05;
+        container.scrollLeft += delta * 1.15;
       }
 
       isWheelingRef.current = true;
@@ -84,7 +88,7 @@ export default function App() {
           behavior: 'smooth'
         });
         setCurrentSection(nearestIdx);
-      }, 140);
+      }, 150);
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false });
@@ -113,10 +117,9 @@ export default function App() {
     }
   }, [currentSection, totalSections]);
 
-  // Drag-to-Scroll support on desktop
+  // Mouse Drag-to-Scroll support on desktop
   const handleMouseDown = (e) => {
-    // Only drag on non-interactive elements
-    if (e.target.closest('button, a, input, select, textarea, .cursor-pointer')) return;
+    if (e.target.closest('button, a, input, select, textarea, .cursor-pointer, .interactive-click')) return;
     isDraggingRef.current = true;
     startXRef.current = e.pageX - containerRef.current.offsetLeft;
     scrollLeftStartRef.current = containerRef.current.scrollLeft;
@@ -124,9 +127,8 @@ export default function App() {
 
   const handleMouseMove = (e) => {
     if (!isDraggingRef.current || !containerRef.current) return;
-    e.preventDefault();
     const x = e.pageX - containerRef.current.offsetLeft;
-    const walk = (x - startXRef.current) * 1.5;
+    const walk = (x - startXRef.current) * 1.6;
     containerRef.current.scrollLeft = scrollLeftStartRef.current - walk;
   };
 
@@ -139,6 +141,35 @@ export default function App() {
     const currentScroll = containerRef.current.scrollLeft;
     const nearestIdx = Math.round(currentScroll / width);
     scrollToSection(nearestIdx);
+  };
+
+  // Mobile Touch Swipe support with soft inertia snap
+  const handleTouchStart = (e) => {
+    if (e.target.closest('button, a, input, select, textarea, .interactive-click')) return;
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (!containerRef.current) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartXRef.current - touchEndX;
+    const width = containerRef.current.clientWidth;
+
+    // Detect intentional horizontal swipe (> 45px)
+    if (Math.abs(diff) > 45) {
+      if (diff > 0 && currentSection < totalSections - 1) {
+        playSlideWhoosh();
+        scrollToSection(currentSection + 1);
+      } else if (diff < 0 && currentSection > 0) {
+        playSlideWhoosh();
+        scrollToSection(currentSection - 1);
+      } else {
+        scrollToSection(currentSection);
+      }
+    } else {
+      const nearestIdx = Math.round(containerRef.current.scrollLeft / width);
+      scrollToSection(nearestIdx);
+    }
   };
 
   // Keyboard navigation (Arrow keys, 1, 2, 3)
@@ -200,7 +231,7 @@ export default function App() {
   const totalCartUnits = cartItems.reduce((acc, it) => acc + (it.quantity || 1), 0);
 
   return (
-    <div className="relative min-h-screen w-screen bg-[#F7EFE3] overflow-hidden flex flex-col select-none">
+    <div className="relative min-h-screen w-screen bg-[#F7EFE3] overflow-hidden flex flex-col select-none touch-pan-y">
       
       {/* Top Navbar */}
       <Navbar
@@ -221,7 +252,10 @@ export default function App() {
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUpOrLeave}
         onMouseLeave={handleMouseUpOrLeave}
-        className="flex-1 flex flex-row overflow-x-auto overflow-y-hidden scroll-snap-x scroll-smooth no-scrollbar w-full h-[calc(100vh-80px)] cursor-grab active:cursor-grabbing"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        className="flex-1 flex flex-row overflow-x-auto overflow-y-hidden scroll-snap-x scroll-smooth no-scrollbar w-full h-[calc(100vh-80px)] cursor-grab active:cursor-grabbing touch-pan-x"
+        style={{ WebkitOverflowScrolling: 'touch' }}
       >
         {/* SECTION 1: HOME / ABOUT US */}
         <section
@@ -256,6 +290,35 @@ export default function App() {
         </section>
       </main>
 
+      {/* Desktop Side Quick Glide Arrows */}
+      {currentSection > 0 && (
+        <button
+          onClick={() => {
+            playSlideWhoosh();
+            scrollToSection(currentSection - 1);
+          }}
+          className="fixed left-3 top-1/2 -translate-y-1/2 z-30 hidden lg:flex w-12 h-12 rounded-full bg-[#FAF3E7]/90 hover:bg-[#8B3A2B] text-[#3A1D0B] hover:text-white border-2 border-[#3A1D0B] items-center justify-center retro-shadow transition-all cursor-pointer group"
+          title="Previous Section (Left Arrow)"
+          aria-label="Previous Section"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+      )}
+
+      {currentSection < totalSections - 1 && (
+        <button
+          onClick={() => {
+            playSlideWhoosh();
+            scrollToSection(currentSection + 1);
+          }}
+          className="fixed right-3 top-1/2 -translate-y-1/2 z-30 hidden lg:flex w-12 h-12 rounded-full bg-[#FAF3E7]/90 hover:bg-[#8B3A2B] text-[#3A1D0B] hover:text-white border-2 border-[#3A1D0B] items-center justify-center retro-shadow transition-all cursor-pointer group"
+          title="Next Section (Right Arrow)"
+          aria-label="Next Section"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+      )}
+
       {/* Floating Bottom Navigation Controller with Progress Track */}
       <SideScrollControls
         currentSection={currentSection}
@@ -278,10 +341,10 @@ export default function App() {
       <SearchModal
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
-        onSelectProduct={(product) => {
+        onSelectProduct={() => {
           scrollToSection(2);
         }}
-        onSelectPromo={(promo) => {
+        onSelectPromo={() => {
           scrollToSection(1);
         }}
       />
