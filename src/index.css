@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-bubble: 'Caprasimo', cursive, serif;
+    --font-retro: 'Fredoka', sans-serif;
+    --font-hand: 'Patrick Hand', cursive;
+    --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+    --bg-cream: #F7EFE3;
+    --bg-card: #FFFDF9;
+    --coffee-dark: #3A1D0B;
+    --coffee-medium: #6B3C1B;
+    --coffee-light: #A4683C;
+    --caramel: #E29D38;
+    --terracotta: #8B3A2B;
+    --terracotta-hover: #A54534;
+    --smoke-tint: #EADDC7;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-cream);
+    color: var(--coffee-dark);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+
+  /* Custom subtle scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #EEDECB;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #A4683C;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #6B3C1B;
+  }
+}
+
+.font-bubble {
+  font-family: 'Caprasimo', cursive, serif;
+}
+
+.font-retro {
+  font-family: 'Fredoka', cursive, sans-serif;
+}
+
+.font-hand {
+  font-family: 'Patrick Hand', cursive, sans-serif;
+}
+
+.font-script {
+  font-family: 'Caveat', cursive, sans-serif;
+}
+
+/* Comic / Retro drop shadows matching mockup */
+.retro-shadow {
+  box-shadow: 4px 4px 0px #3A1D0B;
+}
+
+.retro-shadow-sm {
+  box-shadow: 2px 2px 0px #3A1D0B;
+}
+
+.retro-shadow-lg {
+  box-shadow: 6px 6px 0px #3A1D0B;
+}
+
+.retro-shadow-hover {
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.retro-shadow-hover:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #3A1D0B;
+}
+.retro-shadow-hover:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px #3A1D0B;
+}
+
+/* 3D Bubble text shadow effect */
+.bubble-text-shadow {
+  text-shadow: 
+    -2px -2px 0 #3A1D0B,
+     2px -2px 0 #3A1D0B,
+    -2px  2px 0 #3A1D0B,
+     2px  2px 0 #3A1D0B,
+     4px  5px 0 #3A1D0B;
+}
+
+.doodle-border {
+  border: 2px dashed #6B3C1B;
+}
+
+/* Smoke waves animation */
+@keyframes swaySmoke {
+  0%, 100% {
+    transform: translateX(0) scaleY(1);
+  }
+  50% {
+    transform: translateX(-2%) scaleY(1.05);
+  }
+}
+
+.animate-sway-smoke {
+  animation: swaySmoke 8s ease-in-out infinite;
+}
+
+@keyframes steamRise {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.8) rotate(0deg);
+  }
+  40% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-60px) scale(1.4) rotate(15deg);
+  }
+}
+
+.steam-particle {
+  animation: steamRise 3.5s ease-out infinite;
+}
+
+/* Soft scroll snap container */
+.scroll-snap-x {
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroll-snap-item {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* No scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
