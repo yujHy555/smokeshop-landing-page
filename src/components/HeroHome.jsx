@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, ArrowRight, BookOpen, X, Flame, Smile, Gamepad2, Coffee } from 'lucide-react';
-import SmokeWaves from './SmokeWaves';
 import { playPopSound, playSipChime } from '../utils/soundEffects';
 
 export default function HeroHome({ onGoToMenu, onGoToPromos }) {
   const [showAboutModal, setShowAboutModal] = useState(false);
 
   return (
-    <div className="relative min-w-full w-full h-full flex flex-col justify-between bg-[#F7EFE3] overflow-hidden px-4 sm:px-6 lg:px-10 pt-1.5 sm:pt-3 pb-0 select-none">
+    <div className="relative min-w-full w-full h-full flex flex-col justify-center items-center bg-[#F7EFE3] overflow-hidden px-4 sm:px-6 lg:px-10 py-3 sm:py-6 select-none">
       {/* Decorative Background Doodles */}
       <div className="absolute inset-0 pointer-events-none select-none z-0">
         <span className="absolute top-6 left-8 text-2xl text-[#3A1D0B] opacity-40 animate-pulse">✦</span>
@@ -18,7 +17,7 @@ export default function HeroHome({ onGoToMenu, onGoToPromos }) {
       </div>
 
       {/* Main Hero Content: Centered with Logo as Main Element, perfectly adaptive */}
-      <div className="max-w-4xl mx-auto w-full z-10 flex-1 flex flex-col items-center justify-center text-center my-auto py-1">
+      <div className="max-w-4xl mx-auto w-full z-10 flex flex-col items-center justify-center text-center my-auto py-1">
         
         {/* Top Category Badge */}
         <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#FFFDF9] border border-[#3A1D0B] text-[11px] sm:text-xs font-retro font-bold text-[#6B3C1B] retro-shadow-sm mb-1.5">
@@ -32,7 +31,7 @@ export default function HeroHome({ onGoToMenu, onGoToPromos }) {
           <img
             src="/images/main-logo.jpg"
             alt="The Smoke Shop Official Logo"
-            className="w-full h-auto max-h-[26vh] sm:max-h-[30vh] md:max-h-[33vh] object-contain rounded-xl select-none pointer-events-none"
+            className="w-full h-auto max-h-[28vh] sm:max-h-[32vh] md:max-h-[35vh] object-contain rounded-xl select-none pointer-events-none"
             draggable={false}
           />
         </div>
@@ -103,11 +102,6 @@ export default function HeroHome({ onGoToMenu, onGoToPromos }) {
           </span>
         </div>
 
-      </div>
-
-      {/* Smoke Cloud Waves along Bottom - Compact */}
-      <div className="w-full mt-auto shrink-0">
-        <SmokeWaves />
       </div>
 
       {/* About Us Modal */}
