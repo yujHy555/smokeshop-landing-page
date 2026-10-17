@@ -29,12 +29,15 @@ export default function App() {
   const [soundEnabled, setSoundEnabled] = useState(true);
 
   const containerRef = useRef(null);
-  const isWheelingRef = useRef(false);
-  const wheelTimeoutRef = useRef(null);
   const isDraggingRef = useRef(false);
   const startXRef = useRef(0);
   const scrollLeftStartRef = useRef(0);
   const touchStartXRef = useRef(0);
+
+  // Wheel transition lock & accumulator
+  const isTransitioningRef = useRef(false);
+  const accumulatedDeltaRef = useRef(0);
+  const deltaResetTimeoutRef = useRef(null);
 
   const totalSections = 3;
 
@@ -52,51 +55,71 @@ export default function App() {
     setCurrentSection(targetIdx);
   }, [totalSections]);
 
-  // Handle Wheel Events with Soft Magnetic Snap Stop
+  // Handle Middle Mouse Wheel & Trackpad scrolling with silky soft stop transitions
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const handleWheel = (e) => {
-      // If modal or cart is open, let normal modal scrolling occur
+    const handleGlobalWheel = (e) => {
+      // If modal or cart is open, let modal scroll normally
       if (isCartOpen || isSearchOpen) return;
 
-      // Handle vertical wheel delta (deltaY) and horizontal trackpad swipe (deltaX)
+      // Check if mouse is hovering over an actively scrollable container (e.g. grid list)
+      const scrollableChild = e.target.closest('.overflow-y-auto');
+      if (scrollableChild) {
+        const canScrollDown = scrollableChild.scrollTop + scrollableChild.clientHeight < scrollableChild.scrollHeight - 4;
+        const canScrollUp = scrollableChild.scrollTop > 4;
+        if ((e.deltaY > 0 && canScrollDown) || (e.deltaY < 0 && canScrollUp)) {
+          // Allow inner element to scroll vertically
+          return;
+        }
+      }
+
+      // Intercept wheel on page to perform horizontal section transition
+      e.preventDefault();
+
       const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-      
-      if (Math.abs(delta) > 1) {
-        e.preventDefault();
-        container.scrollLeft += delta * 1.15;
+      accumulatedDeltaRef.current += delta;
+
+      if (deltaResetTimeoutRef.current) {
+        clearTimeout(deltaResetTimeoutRef.current);
       }
 
-      isWheelingRef.current = true;
-      if (wheelTimeoutRef.current) {
-        clearTimeout(wheelTimeoutRef.current);
+      // If not currently transitioning, check threshold
+      if (!isTransitioningRef.current) {
+        const threshold = 30; // responsive trigger for middle mouse wheel notches
+        if (accumulatedDeltaRef.current > threshold) {
+          if (currentSection < totalSections - 1) {
+            isTransitioningRef.current = true;
+            playSlideWhoosh();
+            scrollToSection(currentSection + 1);
+            accumulatedDeltaRef.current = 0;
+            setTimeout(() => {
+              isTransitioningRef.current = false;
+            }, 600);
+          }
+        } else if (accumulatedDeltaRef.current < -threshold) {
+          if (currentSection > 0) {
+            isTransitioningRef.current = true;
+            playSlideWhoosh();
+            scrollToSection(currentSection - 1);
+            accumulatedDeltaRef.current = 0;
+            setTimeout(() => {
+              isTransitioningRef.current = false;
+            }, 600);
+          }
+        }
       }
 
-      // Soft stop magnetic settle after user stops wheeling
-      wheelTimeoutRef.current = setTimeout(() => {
-        isWheelingRef.current = false;
-        if (!container) return;
-        const width = container.clientWidth;
-        const currentScroll = container.scrollLeft;
-        const nearestIdx = Math.round(currentScroll / width);
-        
-        // Gentle soft snap to closest section
-        container.scrollTo({
-          left: nearestIdx * width,
-          behavior: 'smooth'
-        });
-        setCurrentSection(nearestIdx);
-      }, 150);
+      // Reset accumulated delta when rolling pauses
+      deltaResetTimeoutRef.current = setTimeout(() => {
+        accumulatedDeltaRef.current = 0;
+      }, 180);
     };
 
-    container.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('wheel', handleGlobalWheel, { passive: false });
     return () => {
-      container.removeEventListener('wheel', handleWheel);
-      if (wheelTimeoutRef.current) clearTimeout(wheelTimeoutRef.current);
+      window.removeEventListener('wheel', handleGlobalWheel);
+      if (deltaResetTimeoutRef.current) clearTimeout(deltaResetTimeoutRef.current);
     };
-  }, [isCartOpen, isSearchOpen]);
+  }, [currentSection, totalSections, isCartOpen, isSearchOpen, scrollToSection]);
 
   // Track Scroll Progress & Section Detection
   const handleScroll = useCallback(() => {
@@ -155,8 +178,8 @@ export default function App() {
     const diff = touchStartXRef.current - touchEndX;
     const width = containerRef.current.clientWidth;
 
-    // Detect intentional horizontal swipe (> 45px)
-    if (Math.abs(diff) > 45) {
+    // Detect intentional horizontal swipe (> 40px)
+    if (Math.abs(diff) > 40) {
       if (diff > 0 && currentSection < totalSections - 1) {
         playSlideWhoosh();
         scrollToSection(currentSection + 1);
@@ -254,13 +277,13 @@ export default function App() {
         onMouseLeave={handleMouseUpOrLeave}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
-        className="flex-1 flex flex-row overflow-x-auto overflow-y-hidden scroll-snap-x scroll-smooth no-scrollbar w-full h-[calc(100vh-80px)] cursor-grab active:cursor-grabbing touch-pan-x"
+        className="flex-1 flex flex-row overflow-x-hidden overflow-y-hidden scroll-smooth no-scrollbar w-full h-[calc(100vh-80px)] cursor-grab active:cursor-grabbing touch-pan-x"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
         {/* SECTION 1: HOME / ABOUT US */}
         <section
           id="home"
-          className="scroll-snap-item min-w-full w-full h-full flex-shrink-0 flex items-stretch overflow-y-auto no-scrollbar"
+          className="min-w-full w-full h-full flex-shrink-0 flex items-stretch overflow-y-auto no-scrollbar"
         >
           <HeroHome 
             onGoToMenu={() => scrollToSection(2)}
@@ -271,7 +294,7 @@ export default function App() {
         {/* SECTION 2: PROMOTIONS */}
         <section
           id="promotions"
-          className="scroll-snap-item min-w-full w-full h-full flex-shrink-0 flex items-stretch overflow-y-auto no-scrollbar"
+          className="min-w-full w-full h-full flex-shrink-0 flex items-stretch overflow-y-auto no-scrollbar"
         >
           <PromotionsSection 
             onGoToMenu={() => scrollToSection(2)}
@@ -281,7 +304,7 @@ export default function App() {
         {/* SECTION 3: MENU SHOWCASE & AUTOMATIC PRODUCT SLIDESHOW */}
         <section
           id="menu"
-          className="scroll-snap-item min-w-full w-full h-full flex-shrink-0 flex items-stretch overflow-y-auto no-scrollbar"
+          className="min-w-full w-full h-full flex-shrink-0 flex items-stretch overflow-y-auto no-scrollbar"
         >
           <MenuSlideshow 
             onAddToCart={handleAddToCart}
