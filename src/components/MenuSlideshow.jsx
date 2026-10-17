@@ -92,12 +92,12 @@ export default function MenuSlideshow({ onAddToCart, onOpenCart }) {
   };
 
   return (
-    <div className="relative min-w-full w-full h-full flex flex-col justify-center bg-[#F7EFE3] overflow-hidden px-4 sm:px-6 lg:px-10 py-2 sm:py-3 select-none">
+    <div className="relative min-w-full w-full h-full flex flex-col justify-center bg-[#F7EFE3] overflow-hidden px-4 sm:px-6 lg:px-10 py-1.5 sm:py-2 select-none">
       
       <div className="max-w-[1400px] mx-auto w-full z-10 flex flex-col justify-center my-auto">
         
         {/* Header Strip */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-2">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-1.5 mb-1.5">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#FFFDF9] border border-[#3A1D0B] text-[11px] sm:text-xs font-retro font-bold text-[#6B3C1B] retro-shadow-xs mb-1">
               <Sparkles className="w-3.5 h-3.5 text-[#8B3A2B]" />
@@ -139,7 +139,7 @@ export default function MenuSlideshow({ onAddToCart, onOpenCart }) {
         </div>
 
         {/* Category Filter Pills Bar */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 mb-2">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5 mb-1.5">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.id}
@@ -171,7 +171,7 @@ export default function MenuSlideshow({ onAddToCart, onOpenCart }) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
                   transition={{ duration: 0.25, ease: "easeInOut" }}
-                  className="bg-[#FFFDF9] border-3 border-[#3A1D0B] rounded-2xl overflow-hidden retro-shadow relative group cursor-pointer h-[40vh] sm:h-[44vh] md:h-[48vh] max-h-[440px] flex flex-col justify-between"
+                  className="bg-[#FFFDF9] border-3 border-[#3A1D0B] rounded-2xl overflow-hidden retro-shadow relative group cursor-pointer h-[36vh] sm:h-[40vh] md:h-[42vh] max-h-[390px] flex flex-col justify-between"
                   onClick={() => setZoomImage(currentProduct)}
                   title="Click to view full-resolution image"
                 >
@@ -235,7 +235,7 @@ export default function MenuSlideshow({ onAddToCart, onOpenCart }) {
             </div>
 
             {/* Right Column: Customizer & Details (Col 8-12) */}
-            <div className="lg:col-span-5 xl:col-span-4 bg-[#FFFDF9] border-3 border-[#3A1D0B] rounded-2xl p-3.5 sm:p-4 retro-shadow flex flex-col justify-between h-[40vh] sm:h-[44vh] md:h-[48vh] max-h-[440px]">
+            <div className="lg:col-span-5 xl:col-span-4 bg-[#FFFDF9] border-3 border-[#3A1D0B] rounded-2xl p-3 sm:p-3.5 retro-shadow flex flex-col justify-between h-[36vh] sm:h-[40vh] md:h-[42vh] max-h-[390px]">
               
               <div>
                 {/* Title & Price Header */}

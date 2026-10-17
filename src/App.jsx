@@ -333,7 +333,7 @@ export default function App() {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="flex-1 flex flex-row overflow-x-hidden overflow-y-hidden no-scrollbar w-full h-[calc(100dvh-54px)] sm:h-[calc(100dvh-60px)] cursor-grab active:cursor-grabbing touch-pan-x"
+        className="flex-1 min-h-0 flex flex-row overflow-x-hidden overflow-y-hidden no-scrollbar w-full cursor-grab active:cursor-grabbing touch-pan-x"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
         {/* SECTION 1: HOME / ABOUT US */}
@@ -398,13 +398,15 @@ export default function App() {
         </button>
       )}
 
-      {/* Floating Bottom Navigation Controller with Continuous Progress Track */}
-      <SideScrollControls
-        currentSection={currentSection}
-        totalSections={totalSections}
-        onNavigate={scrollToSection}
-        scrollProgress={scrollProgress}
-      />
+      {/* Bottom Dedicated Non-Overlapping Capsule Navigation Dock */}
+      <footer className="w-full shrink-0 flex items-center justify-center py-1 sm:py-1.5 z-30 pointer-events-none">
+        <SideScrollControls
+          currentSection={currentSection}
+          totalSections={totalSections}
+          onNavigate={scrollToSection}
+          scrollProgress={scrollProgress}
+        />
+      </footer>
 
       {/* Interactive Cart Tray Drawer */}
       <CartDrawer

@@ -7,7 +7,7 @@ export default function HeroHome({ onGoToMenu, onGoToPromos }) {
   const [showAboutModal, setShowAboutModal] = useState(false);
 
   return (
-    <div className="relative min-w-full w-full h-full flex flex-col justify-center items-center bg-[#F7EFE3] overflow-hidden px-4 sm:px-6 lg:px-10 py-3 sm:py-6 select-none">
+    <div className="relative min-w-full w-full h-full flex flex-col justify-center items-center bg-[#F7EFE3] overflow-hidden px-4 sm:px-6 lg:px-10 py-2 sm:py-3 select-none">
       {/* Decorative Background Doodles */}
       <div className="absolute inset-0 pointer-events-none select-none z-0">
         <span className="absolute top-6 left-8 text-2xl text-[#3A1D0B] opacity-40 animate-pulse">✦</span>
@@ -17,7 +17,7 @@ export default function HeroHome({ onGoToMenu, onGoToPromos }) {
       </div>
 
       {/* Main Hero Content: Centered with Logo as Main Element, perfectly adaptive */}
-      <div className="max-w-4xl mx-auto w-full z-10 flex flex-col items-center justify-center text-center my-auto py-1">
+      <div className="max-w-4xl mx-auto w-full z-10 flex flex-col items-center justify-center text-center my-auto py-0.5">
         
         {/* Top Category Badge */}
         <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#FFFDF9] border border-[#3A1D0B] text-[11px] sm:text-xs font-retro font-bold text-[#6B3C1B] retro-shadow-sm mb-1.5">
@@ -27,11 +27,11 @@ export default function HeroHome({ onGoToMenu, onGoToPromos }) {
         </div>
 
         {/* PRIMARY HERO ELEMENT: The Official Complete Logo, adaptively sized */}
-        <div className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl rounded-2xl overflow-hidden bg-[#FAF3E7] border-3 border-[#3A1D0B] retro-shadow-sm p-2 sm:p-3 my-0.5 sm:my-1">
+        <div className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl rounded-2xl overflow-hidden bg-[#FAF3E7] border-3 border-[#3A1D0B] retro-shadow-sm p-2 sm:p-2.5 my-0.5">
           <img
             src="/images/main-logo.jpg"
             alt="The Smoke Shop Official Logo"
-            className="w-full h-auto max-h-[28vh] sm:max-h-[32vh] md:max-h-[35vh] object-contain rounded-xl select-none pointer-events-none"
+            className="w-full h-auto max-h-[23vh] sm:max-h-[26vh] md:max-h-[28vh] object-contain rounded-xl select-none pointer-events-none"
             draggable={false}
           />
         </div>

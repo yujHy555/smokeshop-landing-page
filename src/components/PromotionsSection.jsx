@@ -40,7 +40,7 @@ export default function PromotionsSection({ onGoToMenu }) {
   };
 
   return (
-    <div className="relative min-w-full w-full h-full flex flex-col justify-center bg-[#F2E7D5] overflow-hidden px-4 sm:px-6 lg:px-10 py-2 sm:py-3 select-none">
+    <div className="relative min-w-full w-full h-full flex flex-col justify-center bg-[#F2E7D5] overflow-hidden px-4 sm:px-6 lg:px-10 py-1.5 sm:py-2 select-none">
       {/* Background Ambience */}
       <div className="absolute top-0 right-0 -mr-20 -mt-20 w-72 h-72 rounded-full bg-[#E5D2BA]/40 blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-[#D9BF9F]/30 blur-3xl pointer-events-none"></div>
@@ -48,7 +48,7 @@ export default function PromotionsSection({ onGoToMenu }) {
       <div className="max-w-6xl mx-auto w-full z-10 flex flex-col justify-center my-auto">
         
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-2 sm:mb-3">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-1.5 mb-1.5 sm:mb-2">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#FFFDF9] border border-[#3A1D0B] text-[11px] sm:text-xs font-retro font-bold text-[#8B3A2B] retro-shadow-xs mb-1">
               <Gift className="w-3.5 h-3.5 text-[#E29D38]" />
@@ -69,15 +69,15 @@ export default function PromotionsSection({ onGoToMenu }) {
         </div>
 
         {/* Promo Showcase Grid: Compact & Viewport-Adaptive */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 lg:gap-5 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-4 items-stretch">
           
           {/* Left Column: Official Arcade Dark Modal Card (Col 1-5) */}
-          <div className="lg:col-span-5 bg-[#120D08] border-3 border-[#3A1D0B] rounded-2xl p-3.5 sm:p-4 retro-shadow text-white flex flex-col justify-between relative overflow-hidden group">
+          <div className="lg:col-span-5 bg-[#120D08] border-3 border-[#3A1D0B] rounded-2xl p-3 sm:p-3.5 retro-shadow text-white flex flex-col justify-between relative overflow-hidden group">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-[#FFBD2E]/10 rounded-full blur-2xl pointer-events-none"></div>
 
             <div>
               {/* Header Badge */}
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-1.5">
                 <span className="bg-[#00D2FF] text-[#0A2540] font-retro text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
                   <Smartphone className="w-3 h-3" />
                   <span>INSTANT MOBILE ACCESS</span>
@@ -89,20 +89,20 @@ export default function PromotionsSection({ onGoToMenu }) {
               <h3 className="font-bubble text-lg sm:text-xl text-[#FFE6B0] mb-0.5 leading-tight">
                 Scan to Play on Mobile
               </h3>
-              <p className="text-gray-300 text-[11px] sm:text-xs leading-snug mb-2 line-clamp-2">
+              <p className="text-gray-300 text-[11px] sm:text-xs leading-snug mb-1.5 line-clamp-2">
                 Point your phone's camera at this QR code to launch directly on iOS &amp; Android!
               </p>
 
               {/* Center Crisp QR Code */}
-              <div className="flex justify-center my-1.5">
+              <div className="flex justify-center my-1">
                 <div 
-                  className="p-2.5 bg-white rounded-xl shadow-[0_0_20px_rgba(255,189,46,0.25)] border border-white/20 relative group/qr cursor-pointer"
+                  className="p-2 bg-white rounded-xl shadow-[0_0_20px_rgba(255,189,46,0.25)] border border-white/20 relative group/qr cursor-pointer"
                   onClick={() => setShowQrModal(true)}
                   title="Click to enlarge"
                 >
                   <QRCodeSVG
                     value={gameUrl}
-                    size={120}
+                    size={105}
                     level="H"
                     includeMargin={false}
                     fgColor="#120D08"

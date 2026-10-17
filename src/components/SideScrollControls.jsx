@@ -29,14 +29,14 @@ export default function SideScrollControls({
   };
 
   return (
-    <aside aria-label="Horizontal side-scrolling controls" className="fixed bottom-2 sm:bottom-2.5 left-1/2 -translate-x-1/2 z-30 w-[92%] max-w-lg pointer-events-none">
-      <div className="bg-[#FAF3E7]/95 backdrop-blur-md border-2 border-[#3A1D0B] rounded-full p-1.5 px-3 sm:px-4 retro-shadow-sm pointer-events-auto flex items-center justify-between gap-2 sm:gap-3">
+    <aside aria-label="Horizontal side-scrolling controls" className="w-[92%] max-w-lg pointer-events-none">
+      <div className="bg-[#FAF3E7]/95 backdrop-blur-md border-2 border-[#3A1D0B] rounded-full p-1 sm:p-1.5 px-3 sm:px-4 retro-shadow-sm pointer-events-auto flex items-center justify-between gap-2 sm:gap-3">
         
         {/* Previous Button */}
         <button
           onClick={handlePrev}
           disabled={currentSection === 0}
-          className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-[#3A1D0B] flex items-center justify-center transition-all ${
+          className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 border-[#3A1D0B] flex items-center justify-center transition-all ${
             currentSection === 0
               ? 'opacity-30 cursor-not-allowed bg-[#EADDC7]'
               : 'bg-[#FFFDF9] hover:bg-[#8B3A2B] hover:text-white cursor-pointer retro-shadow-sm'
@@ -44,7 +44,7 @@ export default function SideScrollControls({
           title="Previous section (Left arrow)"
           aria-label="Previous Section"
         >
-          <ChevronLeft className="w-5 h-5" />
+          <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
 
         {/* Section Pill Indicators & Mini Progress Track */}
@@ -86,7 +86,7 @@ export default function SideScrollControls({
         <button
           onClick={handleNext}
           disabled={currentSection === totalSections - 1}
-          className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-[#3A1D0B] flex items-center justify-center transition-all ${
+          className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 border-[#3A1D0B] flex items-center justify-center transition-all ${
             currentSection === totalSections - 1
               ? 'opacity-30 cursor-not-allowed bg-[#EADDC7]'
               : 'bg-[#FFFDF9] hover:bg-[#8B3A2B] hover:text-white cursor-pointer retro-shadow-sm'
@@ -94,7 +94,7 @@ export default function SideScrollControls({
           title="Next section (Right arrow)"
           aria-label="Next Section"
         >
-          <ChevronRight className="w-5 h-5" />
+          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
 
       </div>
