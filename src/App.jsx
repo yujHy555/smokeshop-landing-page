@@ -32,7 +32,10 @@ export default function App() {
   const isDraggingRef = useRef(false);
   const startXRef = useRef(0);
   const scrollLeftStartRef = useRef(0);
-  const touchStartXRef = useRef(0);
+  const lastMouseXRef = useRef(0);
+  const lastMouseTimeRef = useRef(0);
+  const velocityXRef = useRef(0);
+  const momentumFrameRef = useRef(null);
 
   // Wheel transition lock & accumulator
   const isTransitioningRef = useRef(false);
@@ -41,12 +44,16 @@ export default function App() {
 
   const totalSections = 3;
 
-  // Smooth Soft Scroll to Section Index
+  // Smooth Scroll to Section Index (triggered only by explicit button/arrow clicks)
   const scrollToSection = useCallback((index) => {
     if (!containerRef.current) return;
     const targetIdx = Math.max(0, Math.min(totalSections - 1, index));
     const container = containerRef.current;
     const targetScrollLeft = targetIdx * container.clientWidth;
+
+    if (momentumFrameRef.current) {
+      cancelAnimationFrame(momentumFrameRef.current);
+    }
 
     container.scrollTo({
       left: targetScrollLeft,
@@ -55,7 +62,7 @@ export default function App() {
     setCurrentSection(targetIdx);
   }, [totalSections]);
 
-  // Handle Middle Mouse Wheel & Trackpad scrolling with silky soft stop transitions
+  // Handle Middle Mouse Wheel scrolling
   useEffect(() => {
     const handleGlobalWheel = (e) => {
       // If modal or cart is open, let modal scroll normally
@@ -67,13 +74,15 @@ export default function App() {
         const canScrollDown = scrollableChild.scrollTop + scrollableChild.clientHeight < scrollableChild.scrollHeight - 4;
         const canScrollUp = scrollableChild.scrollTop > 4;
         if ((e.deltaY > 0 && canScrollDown) || (e.deltaY < 0 && canScrollUp)) {
-          // Allow inner element to scroll vertically
           return;
         }
       }
 
-      // Intercept wheel on page to perform horizontal section transition
       e.preventDefault();
+
+      if (momentumFrameRef.current) {
+        cancelAnimationFrame(momentumFrameRef.current);
+      }
 
       const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
       accumulatedDeltaRef.current += delta;
@@ -121,7 +130,7 @@ export default function App() {
     };
   }, [currentSection, totalSections, isCartOpen, isSearchOpen, scrollToSection]);
 
-  // Track Scroll Progress & Section Detection
+  // Track Scroll Progress & Section Detection Continuously
   const handleScroll = useCallback(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -133,65 +142,122 @@ export default function App() {
     const progress = maxScroll > 0 ? scrollLeft / maxScroll : 0;
     setScrollProgress(Math.max(0, Math.min(1, progress)));
 
-    // Active Section calculation
+    // Active Section calculation for navbar and dock indicators
     const calculatedIdx = Math.round(scrollLeft / width);
     if (calculatedIdx !== currentSection && calculatedIdx >= 0 && calculatedIdx < totalSections) {
       setCurrentSection(calculatedIdx);
     }
   }, [currentSection, totalSections]);
 
-  // Mouse Drag-to-Scroll support on desktop
+  // Smooth Canvas Drag with Natural Inertia and NO SNAP
   const handleMouseDown = (e) => {
     if (e.target.closest('button, a, input, select, textarea, .cursor-pointer, .interactive-click')) return;
+    
+    if (momentumFrameRef.current) {
+      cancelAnimationFrame(momentumFrameRef.current);
+    }
+
     isDraggingRef.current = true;
-    startXRef.current = e.pageX - containerRef.current.offsetLeft;
+    startXRef.current = e.pageX;
     scrollLeftStartRef.current = containerRef.current.scrollLeft;
+    lastMouseXRef.current = e.pageX;
+    lastMouseTimeRef.current = performance.now();
+    velocityXRef.current = 0;
   };
 
   const handleMouseMove = (e) => {
     if (!isDraggingRef.current || !containerRef.current) return;
-    const x = e.pageX - containerRef.current.offsetLeft;
-    const walk = (x - startXRef.current) * 1.6;
+    e.preventDefault();
+
+    const currentX = e.pageX;
+    const now = performance.now();
+    const dt = now - lastMouseTimeRef.current;
+    const dx = currentX - lastMouseXRef.current;
+
+    if (dt > 0) {
+      velocityXRef.current = dx / dt;
+    }
+
+    lastMouseXRef.current = currentX;
+    lastMouseTimeRef.current = now;
+
+    const walk = (currentX - startXRef.current) * 1.25;
     containerRef.current.scrollLeft = scrollLeftStartRef.current - walk;
   };
 
   const handleMouseUpOrLeave = () => {
     if (!isDraggingRef.current || !containerRef.current) return;
     isDraggingRef.current = false;
-    
-    // Soft stop settle to nearest section
-    const width = containerRef.current.clientWidth;
-    const currentScroll = containerRef.current.scrollLeft;
-    const nearestIdx = Math.round(currentScroll / width);
-    scrollToSection(nearestIdx);
+
+    // Apply natural momentum glide without forcing snap to any section
+    let v = -velocityXRef.current * 14;
+    const friction = 0.93;
+
+    const runMomentum = () => {
+      if (Math.abs(v) > 0.4 && containerRef.current && !isDraggingRef.current) {
+        containerRef.current.scrollLeft += v;
+        v *= friction;
+        momentumFrameRef.current = requestAnimationFrame(runMomentum);
+      }
+    };
+
+    if (Math.abs(v) > 0.8) {
+      momentumFrameRef.current = requestAnimationFrame(runMomentum);
+    }
   };
 
-  // Mobile Touch Swipe support with soft inertia snap
+  // Touch Drag on Mobile without snap to section
+  const touchLastXRef = useRef(0);
+  const touchLastTimeRef = useRef(0);
+  const touchVelocityRef = useRef(0);
+
   const handleTouchStart = (e) => {
     if (e.target.closest('button, a, input, select, textarea, .interactive-click')) return;
-    touchStartXRef.current = e.touches[0].clientX;
+    if (momentumFrameRef.current) {
+      cancelAnimationFrame(momentumFrameRef.current);
+    }
+    const touch = e.touches[0];
+    startXRef.current = touch.clientX;
+    scrollLeftStartRef.current = containerRef.current.scrollLeft;
+    touchLastXRef.current = touch.clientX;
+    touchLastTimeRef.current = performance.now();
+    touchVelocityRef.current = 0;
   };
 
-  const handleTouchEnd = (e) => {
+  const handleTouchMove = (e) => {
     if (!containerRef.current) return;
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartXRef.current - touchEndX;
-    const width = containerRef.current.clientWidth;
+    const touch = e.touches[0];
+    const now = performance.now();
+    const dt = now - touchLastTimeRef.current;
+    const dx = touch.clientX - touchLastXRef.current;
 
-    // Detect intentional horizontal swipe (> 40px)
-    if (Math.abs(diff) > 40) {
-      if (diff > 0 && currentSection < totalSections - 1) {
-        playSlideWhoosh();
-        scrollToSection(currentSection + 1);
-      } else if (diff < 0 && currentSection > 0) {
-        playSlideWhoosh();
-        scrollToSection(currentSection - 1);
-      } else {
-        scrollToSection(currentSection);
+    if (dt > 0) {
+      touchVelocityRef.current = dx / dt;
+    }
+
+    touchLastXRef.current = touch.clientX;
+    touchLastTimeRef.current = now;
+
+    const walk = (touch.clientX - startXRef.current);
+    containerRef.current.scrollLeft = scrollLeftStartRef.current - walk;
+  };
+
+  const handleTouchEnd = () => {
+    if (!containerRef.current) return;
+    // Apply natural touch momentum glide without snap
+    let v = -touchVelocityRef.current * 16;
+    const friction = 0.94;
+
+    const runTouchMomentum = () => {
+      if (Math.abs(v) > 0.4 && containerRef.current) {
+        containerRef.current.scrollLeft += v;
+        v *= friction;
+        momentumFrameRef.current = requestAnimationFrame(runTouchMomentum);
       }
-    } else {
-      const nearestIdx = Math.round(containerRef.current.scrollLeft / width);
-      scrollToSection(nearestIdx);
+    };
+
+    if (Math.abs(v) > 0.8) {
+      momentumFrameRef.current = requestAnimationFrame(runTouchMomentum);
     }
   };
 
@@ -267,7 +333,7 @@ export default function App() {
         onToggleSound={() => setSoundEnabled(!soundEnabled)}
       />
 
-      {/* Main Horizontal Side-Scrolling Viewport */}
+      {/* Main Horizontal Side-Scrolling Viewport: Smooth drag without snap */}
       <main
         ref={containerRef}
         onScroll={handleScroll}
@@ -276,8 +342,9 @@ export default function App() {
         onMouseUp={handleMouseUpOrLeave}
         onMouseLeave={handleMouseUpOrLeave}
         onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="flex-1 flex flex-row overflow-x-hidden overflow-y-hidden scroll-smooth no-scrollbar w-full h-[calc(100vh-80px)] cursor-grab active:cursor-grabbing touch-pan-x"
+        className="flex-1 flex flex-row overflow-x-hidden overflow-y-hidden no-scrollbar w-full h-[calc(100vh-80px)] cursor-grab active:cursor-grabbing touch-pan-x"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
         {/* SECTION 1: HOME / ABOUT US */}
@@ -342,7 +409,7 @@ export default function App() {
         </button>
       )}
 
-      {/* Floating Bottom Navigation Controller with Progress Track */}
+      {/* Floating Bottom Navigation Controller with Continuous Progress Track */}
       <SideScrollControls
         currentSection={currentSection}
         totalSections={totalSections}
