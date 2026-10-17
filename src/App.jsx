@@ -309,7 +309,7 @@ export default function App() {
   const totalCartUnits = cartItems.reduce((acc, it) => acc + (it.quantity || 1), 0);
 
   return (
-    <div className="relative min-h-screen w-screen bg-[#F7EFE3] overflow-hidden flex flex-col select-none touch-pan-y">
+    <div className="relative h-[100dvh] max-h-[100dvh] w-screen bg-[#F7EFE3] overflow-hidden flex flex-col select-none touch-pan-x">
       
       {/* Top Navbar */}
       <Navbar
