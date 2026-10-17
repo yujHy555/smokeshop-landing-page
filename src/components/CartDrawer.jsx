@@ -137,7 +137,7 @@ export default function CartDrawer({
                       {item.title}
                     </h5>
                     <span className="font-retro text-sm font-bold text-[#8B3A2B]">
-                      ${(item.price * (item.quantity || 1)).toFixed(2)}
+                      R{(item.price * (item.quantity || 1)).toFixed(2)}
                     </span>
                   </div>
 
@@ -204,17 +204,17 @@ export default function CartDrawer({
             <div className="space-y-1 text-xs font-retro text-[#6B3C1B] pt-2">
               <div className="flex justify-between">
                 <span>Subtotal:</span>
-                <span className="font-bold text-[#3A1D0B]">${rawSubtotal.toFixed(2)}</span>
+                <span className="font-bold text-[#3A1D0B]">R{rawSubtotal.toFixed(2)}</span>
               </div>
               {appliedDiscount > 0 && (
                 <div className="flex justify-between text-[#8B3A2B] font-bold">
                   <span>Game Reward Discount (20%):</span>
-                  <span>-${discountAmount.toFixed(2)}</span>
+                  <span>-R{discountAmount.toFixed(2)}</span>
                 </div>
               )}
               <div className="flex justify-between text-base font-bold text-[#3A1D0B] pt-1 border-t border-[#DFCBB5]">
                 <span>Total:</span>
-                <span className="font-bubble text-xl text-[#8B3A2B]">${finalTotal.toFixed(2)}</span>
+                <span className="font-bubble text-xl text-[#8B3A2B]">R{finalTotal.toFixed(2)}</span>
               </div>
             </div>
 

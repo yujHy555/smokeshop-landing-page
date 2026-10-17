@@ -4,14 +4,15 @@ import { playPopSound, playSlideWhoosh } from '../utils/soundEffects';
 
 export default function SideScrollControls({ 
   currentSection, 
-  totalSections = 3, 
+  totalSections = 4, 
   onNavigate, 
   scrollProgress = 0 
 }) {
   const sections = [
     { id: 0, label: '01 Home & About', short: 'Home' },
-    { id: 1, label: '02 Promotions & Game', short: 'Promos' },
-    { id: 2, label: '03 Menu & Slideshow', short: 'Menu' },
+    { id: 1, label: '02 Promos & Game', short: 'Promos' },
+    { id: 2, label: '03 Menu & Sips', short: 'Menu' },
+    { id: 3, label: '04 Official Merch', short: 'Merch' },
   ];
 
   const handlePrev = () => {
@@ -29,7 +30,7 @@ export default function SideScrollControls({
   };
 
   return (
-    <aside aria-label="Horizontal side-scrolling controls" className="w-[92%] max-w-lg pointer-events-none">
+    <aside aria-label="Horizontal side-scrolling controls" className="w-[95%] max-w-xl pointer-events-none">
       <div className="bg-[#FAF3E7]/95 backdrop-blur-md border-2 border-[#3A1D0B] rounded-full p-1 sm:p-1.5 px-3 sm:px-4 retro-shadow-sm pointer-events-auto flex items-center justify-between gap-2 sm:gap-3">
         
         {/* Previous Button */}

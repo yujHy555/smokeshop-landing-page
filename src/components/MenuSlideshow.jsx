@@ -279,7 +279,7 @@ export default function MenuSlideshow({ onAddToCart, onOpenCart }) {
                           Milk Preference:
                         </label>
                         <div className="grid grid-cols-3 gap-1">
-                          {['Whole Milk', 'Oat Milk (+0.50)', 'Almond Milk'].map((milk) => (
+                          {['Whole Milk', 'Oat Milk (+R8.00)', 'Almond Milk'].map((milk) => (
                             <button
                               key={milk}
                               onClick={() => {

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, X, ArrowRight, Coffee, Sparkles } from 'lucide-react';
-import { PRODUCTS, PROMOTIONS } from '../data/products';
+import { Search, X, ArrowRight, Coffee, Sparkles, Shirt } from 'lucide-react';
+import { PRODUCTS, PROMOTIONS, MERCHANDISE } from '../data/products';
 import { playPopSound } from '../utils/soundEffects';
 
-export default function SearchModal({ isOpen, onClose, onSelectProduct, onSelectPromo }) {
+export default function SearchModal({ isOpen, onClose, onSelectProduct, onSelectPromo, onSelectMerch }) {
   const [searchTerm, setSearchTerm] = useState('');
 
   if (!isOpen) return null;
@@ -13,6 +13,13 @@ export default function SearchModal({ isOpen, onClose, onSelectProduct, onSelect
     p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredMerch = MERCHANDISE.filter(m => 
+    m.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    m.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    m.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    m.shortTitle.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const filteredPromos = PROMOTIONS.filter(p => 
@@ -91,6 +98,38 @@ export default function SearchModal({ isOpen, onClose, onSelectProduct, onSelect
             </div>
           )}
 
+          {/* Official Merch */}
+          {filteredMerch.length > 0 && (
+            <div className="pt-2">
+              <div className="text-[11px] font-retro font-bold text-[#8A5230] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <Shirt className="w-3.5 h-3.5 text-[#8B3A2B]" />
+                <span>Official Merch Drop ({filteredMerch.length})</span>
+              </div>
+              <div className="space-y-2">
+                {filteredMerch.map((m) => (
+                  <div
+                    key={m.id}
+                    onClick={() => {
+                      playPopSound();
+                      if (onSelectMerch) onSelectMerch(m);
+                      onClose();
+                    }}
+                    className="p-2.5 rounded-xl bg-[#FAF3E7] hover:bg-[#F0E2CD] border border-[#DFCBB5] flex items-center justify-between cursor-pointer transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <img src={m.image} alt={m.title} className="w-10 h-10 rounded-lg object-contain bg-white border border-[#3A1D0B]" />
+                      <div>
+                        <div className="font-bubble text-sm text-[#3A1D0B]">{m.title}</div>
+                        <div className="font-retro text-xs text-[#8B3A2B] font-bold">{m.formattedPrice} • {m.category}</div>
+                      </div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-[#8A5230]" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Promos */}
           {filteredPromos.length > 0 && (
             <div className="pt-2">
@@ -121,9 +160,9 @@ export default function SearchModal({ isOpen, onClose, onSelectProduct, onSelect
             </div>
           )}
 
-          {filteredProducts.length === 0 && filteredPromos.length === 0 && (
+          {filteredProducts.length === 0 && filteredMerch.length === 0 && filteredPromos.length === 0 && (
             <div className="py-8 text-center text-[#8A5230] font-retro text-sm">
-              No coffee or promo found matching "{searchTerm}".
+              No coffee, merch, or promo found matching "{searchTerm}".
             </div>
           )}
         </div>

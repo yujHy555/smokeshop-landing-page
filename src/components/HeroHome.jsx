@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, ArrowRight, BookOpen, X, Flame, Smile, Gamepad2, Coffee } from 'lucide-react';
+import { Sparkles, ArrowRight, BookOpen, X, Flame, Smile, Gamepad2, Coffee, Shirt } from 'lucide-react';
 import { playPopSound, playSipChime } from '../utils/soundEffects';
 
-export default function HeroHome({ onGoToMenu, onGoToPromos }) {
+export default function HeroHome({ onGoToMenu, onGoToPromos, onGoToMerch }) {
   const [showAboutModal, setShowAboutModal] = useState(false);
 
   return (
@@ -50,17 +50,28 @@ export default function HeroHome({ onGoToMenu, onGoToPromos }) {
         </div>
 
         {/* Action Buttons Row */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5 mt-2.5 sm:mt-3 mb-1.5">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 mt-2.5 sm:mt-3 mb-1.5">
           <button
             onClick={() => {
               playPopSound();
               onGoToMenu();
             }}
-            className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[#8B3A2B] hover:bg-[#A54534] text-[#FFFDF9] font-retro text-xs sm:text-sm font-bold tracking-wider border-2 border-[#3A1D0B] retro-shadow-sm flex items-center gap-1.5 cursor-pointer"
+            className="px-4 sm:px-5 py-2 rounded-full bg-[#8B3A2B] hover:bg-[#A54534] text-[#FFFDF9] font-retro text-xs sm:text-sm font-bold tracking-wider border-2 border-[#3A1D0B] retro-shadow-sm flex items-center gap-1.5 cursor-pointer"
           >
             <Coffee className="w-3.5 h-3.5" />
-            <span>SHOP NOW</span>
+            <span>MENU</span>
             <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+
+          <button
+            onClick={() => {
+              playPopSound();
+              if (onGoToMerch) onGoToMerch();
+            }}
+            className="px-4 sm:px-5 py-2 rounded-full bg-[#3A1D0B] hover:bg-[#522910] text-[#FFFDF9] font-retro text-xs sm:text-sm font-bold tracking-wider border-2 border-[#3A1D0B] retro-shadow-sm flex items-center gap-1.5 cursor-pointer"
+          >
+            <Shirt className="w-3.5 h-3.5 text-[#E29D38]" />
+            <span>OFFICIAL MERCH</span>
           </button>
 
           <button
@@ -68,7 +79,7 @@ export default function HeroHome({ onGoToMenu, onGoToPromos }) {
               playPopSound();
               onGoToPromos();
             }}
-            className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[#E29D38] hover:bg-[#D48F2A] text-[#3A1D0B] font-retro text-xs sm:text-sm font-bold tracking-wider border-2 border-[#3A1D0B] retro-shadow-sm flex items-center gap-1.5 cursor-pointer"
+            className="px-4 sm:px-5 py-2 rounded-full bg-[#E29D38] hover:bg-[#D48F2A] text-[#3A1D0B] font-retro text-xs sm:text-sm font-bold tracking-wider border-2 border-[#3A1D0B] retro-shadow-sm flex items-center gap-1.5 cursor-pointer"
           >
             <Gamepad2 className="w-3.5 h-3.5" />
             <span>PLAY GAME</span>
@@ -79,7 +90,7 @@ export default function HeroHome({ onGoToMenu, onGoToPromos }) {
               playSipChime();
               setShowAboutModal(true);
             }}
-            className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[#FFFDF9] hover:bg-[#F3E6D3] text-[#3A1D0B] font-retro text-xs sm:text-sm font-bold tracking-wider border-2 border-[#3A1D0B] retro-shadow-sm flex items-center gap-1.5 cursor-pointer"
+            className="px-4 sm:px-5 py-2 rounded-full bg-[#FFFDF9] hover:bg-[#F3E6D3] text-[#3A1D0B] font-retro text-xs sm:text-sm font-bold tracking-wider border-2 border-[#3A1D0B] retro-shadow-sm flex items-center gap-1.5 cursor-pointer"
           >
             <BookOpen className="w-3.5 h-3.5 text-[#6B3C1B]" />
             <span>ABOUT US</span>
@@ -168,7 +179,7 @@ export default function HeroHome({ onGoToMenu, onGoToPromos }) {
                 </div>
 
                 <p>
-                  Whether you are dropping in for a lightning-fast <strong>$3.00 Espresso Shot</strong> before work, 
+                  Whether you are dropping in for a lightning-fast <strong>R35.00 Espresso Shot</strong> before work, 
                   cooling off with a creamy chocolate-drizzled <strong>Coffee Freeza</strong>, biting into a warm <strong>Double Chocolate Doughnut</strong>, 
                   or challenging friends in our coffee arcade game, you will always find a warm smile waiting for you.
                 </p>

@@ -17,6 +17,7 @@ export default function Navbar({
     { id: 0, label: 'HOME & ABOUT', href: '#home' },
     { id: 1, label: 'PROMOTIONS', href: '#promotions' },
     { id: 2, label: 'MENU', href: '#menu' },
+    { id: 3, label: 'MERCH', href: '#merch' },
   ];
 
   const handleNavClick = (idx) => {

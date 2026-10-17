@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import HeroHome from './components/HeroHome';
 import PromotionsSection from './components/PromotionsSection';
 import MenuSlideshow from './components/MenuSlideshow';
+import MerchandiseSection from './components/MerchandiseSection';
 import SideScrollControls from './components/SideScrollControls';
 import CartDrawer from './components/CartDrawer';
 import SearchModal from './components/SearchModal';
@@ -31,7 +32,7 @@ export default function App() {
   const accumulatedDeltaRef = useRef(0);
   const deltaResetTimeoutRef = useRef(null);
 
-  const totalSections = 3;
+  const totalSections = 4;
 
   // Smooth Scroll to Section Index (triggered only by explicit button/arrow clicks)
   const scrollToSection = useCallback((index) => {
@@ -344,6 +345,7 @@ export default function App() {
           <HeroHome 
             onGoToMenu={() => scrollToSection(2)}
             onGoToPromos={() => scrollToSection(1)}
+            onGoToMerch={() => scrollToSection(3)}
           />
         </section>
 
@@ -363,6 +365,17 @@ export default function App() {
           className="min-w-full w-full h-full flex-shrink-0 flex items-stretch overflow-hidden select-none"
         >
           <MenuSlideshow 
+            onAddToCart={handleAddToCart}
+            onOpenCart={() => setIsCartOpen(true)}
+          />
+        </section>
+
+        {/* SECTION 4: OFFICIAL MERCHANDISE */}
+        <section
+          id="merch"
+          className="min-w-full w-full h-full flex-shrink-0 flex items-stretch overflow-hidden select-none"
+        >
+          <MerchandiseSection 
             onAddToCart={handleAddToCart}
             onOpenCart={() => setIsCartOpen(true)}
           />
@@ -427,6 +440,9 @@ export default function App() {
         }}
         onSelectPromo={() => {
           scrollToSection(1);
+        }}
+        onSelectMerch={() => {
+          scrollToSection(3);
         }}
       />
 
