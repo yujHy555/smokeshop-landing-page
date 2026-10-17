@@ -9,7 +9,7 @@ export default function SmokeWaves({ className = "" }) {
         viewBox="0 0 1440 140"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-24 sm:h-32 md:h-36 block preserve-3d"
+        className="w-full h-10 sm:h-14 md:h-16 block preserve-3d"
         preserveAspectRatio="none"
       >
         {/* Deep cloud layer */}

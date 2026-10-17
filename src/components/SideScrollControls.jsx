@@ -29,8 +29,8 @@ export default function SideScrollControls({
   };
 
   return (
-    <aside aria-label="Horizontal side-scrolling controls" className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 w-[94%] max-w-xl pointer-events-none">
-      <div className="bg-[#FAF3E7]/95 backdrop-blur-md border-3 border-[#3A1D0B] rounded-full p-2 px-3 sm:px-4 retro-shadow-lg pointer-events-auto flex items-center justify-between gap-2 sm:gap-4">
+    <aside aria-label="Horizontal side-scrolling controls" className="fixed bottom-2 sm:bottom-2.5 left-1/2 -translate-x-1/2 z-30 w-[92%] max-w-lg pointer-events-none">
+      <div className="bg-[#FAF3E7]/95 backdrop-blur-md border-2 border-[#3A1D0B] rounded-full p-1.5 px-3 sm:px-4 retro-shadow-sm pointer-events-auto flex items-center justify-between gap-2 sm:gap-3">
         
         {/* Previous Button */}
         <button

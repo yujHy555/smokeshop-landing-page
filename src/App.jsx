@@ -12,18 +12,7 @@ import { playPopSound, playSlideWhoosh } from './utils/soundEffects';
 export default function App() {
   const [currentSection, setCurrentSection] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 'espresso-shot',
-      title: 'ESPRESSO SHOT',
-      price: 3.00,
-      image: '/images/espresso-shot.jpg',
-      milk: 'Standard (None)',
-      sweetness: 'Unsweetened',
-      quantity: 1,
-      cartId: 'default-espresso-1'
-    }
-  ]);
+  const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -344,13 +333,13 @@ export default function App() {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="flex-1 flex flex-row overflow-x-hidden overflow-y-hidden no-scrollbar w-full h-[calc(100vh-80px)] cursor-grab active:cursor-grabbing touch-pan-x"
+        className="flex-1 flex flex-row overflow-x-hidden overflow-y-hidden no-scrollbar w-full h-[calc(100dvh-54px)] sm:h-[calc(100dvh-60px)] cursor-grab active:cursor-grabbing touch-pan-x"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
         {/* SECTION 1: HOME / ABOUT US */}
         <section
           id="home"
-          className="min-w-full w-full h-full flex-shrink-0 flex items-stretch overflow-y-auto no-scrollbar"
+          className="min-w-full w-full h-full flex-shrink-0 flex items-stretch overflow-hidden select-none"
         >
           <HeroHome 
             onGoToMenu={() => scrollToSection(2)}
@@ -361,7 +350,7 @@ export default function App() {
         {/* SECTION 2: PROMOTIONS */}
         <section
           id="promotions"
-          className="min-w-full w-full h-full flex-shrink-0 flex items-stretch overflow-y-auto no-scrollbar"
+          className="min-w-full w-full h-full flex-shrink-0 flex items-stretch overflow-hidden select-none"
         >
           <PromotionsSection 
             onGoToMenu={() => scrollToSection(2)}
@@ -371,7 +360,7 @@ export default function App() {
         {/* SECTION 3: MENU SHOWCASE & AUTOMATIC PRODUCT SLIDESHOW */}
         <section
           id="menu"
-          className="min-w-full w-full h-full flex-shrink-0 flex items-stretch overflow-y-auto no-scrollbar"
+          className="min-w-full w-full h-full flex-shrink-0 flex items-stretch overflow-hidden select-none"
         >
           <MenuSlideshow 
             onAddToCart={handleAddToCart}

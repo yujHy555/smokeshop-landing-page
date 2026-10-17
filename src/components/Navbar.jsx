@@ -60,7 +60,7 @@ export default function Navbar({
       </div>
 
       {/* Main Navigation Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-13 sm:h-15 flex items-center justify-between">
         {/* Official Main Logo */}
         <button 
           onClick={() => handleNavClick(0)}
@@ -70,7 +70,7 @@ export default function Navbar({
           <img
             src="/images/main-logo.png"
             alt="Smoke Shop EST. 2024"
-            className="h-11 sm:h-14 md:h-16 w-auto object-contain transition-transform group-hover:scale-105"
+            className="h-9 sm:h-11 md:h-12 w-auto object-contain transition-transform group-hover:scale-105"
           />
         </button>
 
