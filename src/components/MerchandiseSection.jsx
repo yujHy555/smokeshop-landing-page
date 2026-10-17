@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, ShoppingBag, Plus, Check, Maximize2, X, Shirt, Coffee, Tag, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Sparkles, ShoppingBag, Plus, Check, Maximize2, X, Shirt, Coffee, Tag, ArrowRight, ShieldCheck, Play, Pause, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MERCHANDISE } from '../data/products';
 import { playPopSound, playSipChime, playSlideWhoosh } from '../utils/soundEffects';
 
 export default function MerchandiseSection({ onAddToCart, onOpenCart }) {
   const [activeCategory, setActiveCategory] = useState('All');
-  const [selectedMerchId, setSelectedMerchId] = useState(MERCHANDISE[0].id);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [progress, setProgress] = useState(0);
+
   const [selectedSize, setSelectedSize] = useState('L');
   const [selectedPackaging, setSelectedPackaging] = useState('Collector Gift Box 🎁');
   const [addedItemName, setAddedItemName] = useState(null);
   const [zoomItem, setZoomItem] = useState(null);
   const [viewMode, setViewMode] = useState('showcase'); // 'showcase' | 'grid'
+
+  const SLIDE_DURATION = 5000; // 5s per merch item
 
   const categories = [
     { id: 'All', label: 'All Merch (4)' },
@@ -23,13 +28,53 @@ export default function MerchandiseSection({ onAddToCart, onOpenCart }) {
     ? MERCHANDISE
     : MERCHANDISE.filter(m => m.category === activeCategory);
 
-  const currentItem = MERCHANDISE.find(m => m.id === selectedMerchId) || filteredMerch[0] || MERCHANDISE[0];
+  // Safety clamp index when category filter changes
+  useEffect(() => {
+    setCurrentIndex(0);
+    setProgress(0);
+  }, [activeCategory]);
+
+  const currentItem = filteredMerch[currentIndex] || filteredMerch[0] || MERCHANDISE[0];
   const isApparel = currentItem.category === 'Wearables';
 
-  const handleSelectMerch = (item) => {
+  // Auto-play progress loop matching coffee & food slideshow
+  useEffect(() => {
+    if (!isPlaying || filteredMerch.length <= 1) return;
+
+    const intervalTime = 50;
+    const step = (intervalTime / SLIDE_DURATION) * 100;
+
+    const timer = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          setCurrentIndex((curr) => (curr + 1) % filteredMerch.length);
+          return 0;
+        }
+        return prev + step;
+      });
+    }, intervalTime);
+
+    return () => clearInterval(timer);
+  }, [isPlaying, currentIndex, filteredMerch.length]);
+
+  const handleNext = () => {
+    playSlideWhoosh();
+    setProgress(0);
+    setCurrentIndex((prev) => (prev + 1) % filteredMerch.length);
+  };
+
+  const handlePrev = () => {
+    playSlideWhoosh();
+    setProgress(0);
+    setCurrentIndex((prev) => (prev - 1 + filteredMerch.length) % filteredMerch.length);
+  };
+
+  const handleSelectSlide = (idx) => {
     playPopSound();
-    setSelectedMerchId(item.id);
-    if (item.sizes) {
+    setProgress(0);
+    setCurrentIndex(idx);
+    const item = filteredMerch[idx];
+    if (item && item.sizes) {
       setSelectedSize(item.sizes[2] || item.sizes[0]);
     }
   };
@@ -79,7 +124,7 @@ export default function MerchandiseSection({ onAddToCart, onOpenCart }) {
             </p>
           </div>
 
-          {/* View Mode Switcher */}
+          {/* View Mode & Auto-Play Controls */}
           <div className="flex items-center gap-2">
             <button
               onClick={() => {
@@ -88,8 +133,21 @@ export default function MerchandiseSection({ onAddToCart, onOpenCart }) {
               }}
               className="px-3 py-1 rounded-full bg-[#FFFDF9] border border-[#3A1D0B] font-retro text-[11px] sm:text-xs font-bold text-[#3A1D0B] retro-shadow-xs hover:bg-[#EADDC7] transition-colors cursor-pointer"
             >
-              {viewMode === 'showcase' ? 'Browse Grid (4)' : 'Featured Showcase'}
+              {viewMode === 'showcase' ? 'Browse Grid (4)' : 'Showcase Slideshow'}
             </button>
+
+            {viewMode === 'showcase' && (
+              <button
+                onClick={() => {
+                  playPopSound();
+                  setIsPlaying(!isPlaying);
+                }}
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#FFFDF9] border border-[#3A1D0B] flex items-center justify-center text-[#3A1D0B] retro-shadow-xs hover:bg-[#EADDC7] transition-colors cursor-pointer"
+                title={isPlaying ? "Pause Automatic Merch Slideshow" : "Resume Automatic Merch Slideshow"}
+              >
+                {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
+              </button>
+            )}
           </div>
         </div>
 
@@ -101,8 +159,6 @@ export default function MerchandiseSection({ onAddToCart, onOpenCart }) {
               onClick={() => {
                 playPopSound();
                 setActiveCategory(cat.id);
-                const first = MERCHANDISE.find(m => cat.id === 'All' || m.category === cat.id);
-                if (first) setSelectedMerchId(first.id);
               }}
               className={`px-3 py-1 rounded-full text-[11px] font-retro font-bold whitespace-nowrap transition-all border cursor-pointer ${
                 activeCategory === cat.id 
@@ -157,17 +213,25 @@ export default function MerchandiseSection({ onAddToCart, onOpenCart }) {
                     </div>
                   </div>
 
+                  {/* Auto-Play Slideshow Progress Bar Strip */}
+                  <div className="w-full bg-[#EADDC7] h-1.5 overflow-hidden shrink-0">
+                    <div 
+                      className="h-full bg-[#8B3A2B] transition-all duration-75"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+
                   {/* Thumbnail Row inside Showcase */}
                   <div className="bg-[#FAF3E7] p-1.5 border-t border-[#DFCBB5] flex items-center justify-center gap-2 overflow-x-auto no-scrollbar shrink-0">
-                    {MERCHANDISE.map((item) => (
+                    {filteredMerch.map((item, idx) => (
                       <button
                         key={item.id}
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleSelectMerch(item);
+                          handleSelectSlide(idx);
                         }}
                         className={`p-1 rounded-xl border-2 transition-all cursor-pointer flex items-center gap-2 ${
-                          selectedMerchId === item.id
+                          currentIndex === idx
                             ? 'bg-[#FFFDF9] border-[#8B3A2B] shadow-xs scale-102'
                             : 'bg-white/70 border-transparent hover:border-[#DFCBB5]'
                         }`}
@@ -182,6 +246,29 @@ export default function MerchandiseSection({ onAddToCart, onOpenCart }) {
                   </div>
                 </motion.div>
               </AnimatePresence>
+
+              {/* Prev / Next Floating Arrows */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrev();
+                }}
+                className="absolute left-1 sm:-left-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#FFFDF9] border-2 border-[#3A1D0B] flex items-center justify-center text-[#3A1D0B] retro-shadow hover:bg-[#8B3A2B] hover:text-white transition-all cursor-pointer z-20"
+                aria-label="Previous Merch Item"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNext();
+                }}
+                className="absolute right-1 sm:-right-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#FFFDF9] border-2 border-[#3A1D0B] flex items-center justify-center text-[#3A1D0B] retro-shadow hover:bg-[#8B3A2B] hover:text-white transition-all cursor-pointer z-20"
+                aria-label="Next Merch Item"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
             </div>
 
             {/* Right Column: Customizer, Sizing & Add to Tray (Col 8-12) */}
@@ -318,6 +405,22 @@ export default function MerchandiseSection({ onAddToCart, onOpenCart }) {
                     </button>
                   </motion.div>
                 )}
+
+                {/* Slideshow Progress Dots */}
+                <div className="flex items-center justify-center gap-1 pt-0.5">
+                  {filteredMerch.map((prod, idx) => (
+                    <button
+                      key={prod.id}
+                      onClick={() => handleSelectSlide(idx)}
+                      className={`h-2 rounded-full transition-all cursor-pointer ${
+                        currentIndex === idx 
+                          ? 'w-6 bg-[#8B3A2B] border border-[#3A1D0B]' 
+                          : 'w-2 bg-[#DFCBB5] hover:bg-[#6B3C1B]'
+                      }`}
+                      title={prod.title}
+                    />
+                  ))}
+                </div>
               </div>
 
             </div>
@@ -326,7 +429,7 @@ export default function MerchandiseSection({ onAddToCart, onOpenCart }) {
         ) : (
           /* Grid View Mode: All 4 Merch Items */
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-stretch h-[36vh] sm:h-[40vh] md:h-[42vh] max-h-[390px] overflow-y-auto pr-1">
-            {filteredMerch.map((item) => (
+            {filteredMerch.map((item, idx) => (
               <div
                 key={item.id}
                 className="bg-[#FFFDF9] border-2 border-[#3A1D0B] rounded-2xl p-2.5 retro-shadow-sm flex flex-col justify-between group hover:border-[#8B3A2B] transition-all"
@@ -365,7 +468,7 @@ export default function MerchandiseSection({ onAddToCart, onOpenCart }) {
                 <div className="mt-2 pt-2 border-t border-[#DFCBB5] flex items-center gap-1.5">
                   <button
                     onClick={() => {
-                      handleSelectMerch(item);
+                      handleSelectSlide(idx);
                       setViewMode('showcase');
                     }}
                     className="flex-1 py-1 rounded-lg bg-[#FAF3E7] hover:bg-[#EADDC7] text-[#3A1D0B] font-retro text-[10px] font-bold border border-[#3A1D0B] transition-colors cursor-pointer"
